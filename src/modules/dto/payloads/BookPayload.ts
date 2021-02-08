@@ -1,5 +1,4 @@
 import { ObjectID } from "mongodb";
-
 import { ObjectType, Field, ID } from "type-graphql";
 
 @ObjectType({ description: `This is the Book payload` })
@@ -13,9 +12,9 @@ export class BookPayload {
   @Field()
   public author: string;
   @Field()
-  public classification?: string;
+  public classification: string;
   @Field()
-  public bookUrl?: string;
+  public bookUrl: string;
   @Field()
-  public synopsis?: string;
+  public synopsis: string;
 }

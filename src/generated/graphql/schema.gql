@@ -3,6 +3,25 @@
 # !!!   DO NOT MODIFY THIS FILE BY YOURSELF   !!!
 # -----------------------------------------------
 
+"""Article input"""
+input ArticleInput {
+  articleUrl: String!
+  excerpt: String!
+  publisher: String!
+  queryType: String!
+  title: String!
+}
+
+"""Article Payload"""
+type ArticlePayload {
+  articleUrl: String!
+  excerpt: String!
+  id: ID!
+  publisher: String!
+  queryType: String
+  title: String!
+}
+
 """Portfolio input"""
 input BookInput {
   author: String!
@@ -25,6 +44,7 @@ type BookPayload {
 }
 
 type Mutation {
+  addArticle(data: ArticleInput!): SuccessPayload!
   addBook(data: BookInput!): SuccessPayload!
   addProject(data: PortfolioInput!): SuccessPayload!
 }
@@ -59,6 +79,7 @@ type PortfolioPayload {
 }
 
 type Query {
+  getArticles(data: String!): [ArticlePayload!]!
   getBooks(data: String!): [BookPayload!]!
   getProjects(data: String!): [PortfolioPayload!]!
 }

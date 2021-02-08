@@ -1,7 +1,7 @@
 import { Arg, Mutation, Resolver, ClassType } from "type-graphql";
 
-import { PortfolioModel, BookModel } from "../entities";
-import { SuccessPayload, PortfolioInput } from "../dto";
+import { PortfolioModel, BookModel, ArticleModel } from "../entities";
+import { SuccessPayload, PortfolioInput, ArticleInput } from "../dto";
 import { BookInput } from "../dto/inputs/BookInput";
 
 function baseCreateResolver<T extends ClassType, X extends ClassType>(
@@ -38,4 +38,10 @@ export const AddBookResolver = baseCreateResolver(
   SuccessPayload,
   BookInput,
   BookModel,
+);
+export const AddArticleResolver = baseCreateResolver(
+  "Article",
+  SuccessPayload,
+  ArticleInput,
+  ArticleModel,
 );

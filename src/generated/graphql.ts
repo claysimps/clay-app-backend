@@ -20,6 +20,7 @@ export type Query = {
   __typename?: 'Query';
   getProjects: Array<PortfolioPayload>;
   getBooks: Array<BookPayload>;
+  getArticles: Array<ArticlePayload>;
 };
 
 
@@ -33,6 +34,14 @@ export class QueryGetProjectsArgs {
 
 @TypeGraphQL.ArgsType()
 export class QueryGetBooksArgs {
+
+  @TypeGraphQL.Field(type => String)
+  data!: Scalars['String'];
+};
+
+
+@TypeGraphQL.ArgsType()
+export class QueryGetArticlesArgs {
 
   @TypeGraphQL.Field(type => String)
   data!: Scalars['String'];
@@ -62,6 +71,12 @@ export class PortfolioPayload {
 
   @TypeGraphQL.Field(type => String)
   cardBodyText!: Scalars['String'];
+
+  @TypeGraphQL.Field(type => String)
+  buttonOneLink!: Scalars['String'];
+
+  @TypeGraphQL.Field(type => String, { nullable: true })
+  buttonTwoLink!: Maybe<Scalars['String']>;
 
   @TypeGraphQL.Field(type => String)
   buttonOptionOne!: Scalars['String'];
@@ -96,10 +111,34 @@ export class BookPayload {
   synopsis!: Scalars['String'];
 };
 
+@TypeGraphQL.ObjectType({ description: 'Article Payload' })
+export class ArticlePayload {
+  __typename?: 'ArticlePayload';
+
+  @TypeGraphQL.Field(type => TypeGraphQL.ID)
+  id!: Scalars['ID'];
+
+  @TypeGraphQL.Field(type => String, { nullable: true })
+  queryType!: Maybe<Scalars['String']>;
+
+  @TypeGraphQL.Field(type => String)
+  title!: Scalars['String'];
+
+  @TypeGraphQL.Field(type => String)
+  publisher!: Scalars['String'];
+
+  @TypeGraphQL.Field(type => String)
+  articleUrl!: Scalars['String'];
+
+  @TypeGraphQL.Field(type => String)
+  excerpt!: Scalars['String'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   addProject: SuccessPayload;
   addBook: SuccessPayload;
+  addArticle: SuccessPayload;
 };
 
 
@@ -116,6 +155,14 @@ export class MutationAddBookArgs {
 
   @TypeGraphQL.Field(type => BookInput)
   data!: FixDecorator<BookInput>;
+};
+
+
+@TypeGraphQL.ArgsType()
+export class MutationAddArticleArgs {
+
+  @TypeGraphQL.Field(type => ArticleInput)
+  data!: FixDecorator<ArticleInput>;
 };
 
 @TypeGraphQL.ObjectType({ description: 'confirms upload' })
@@ -148,6 +195,12 @@ export class PortfolioInput {
   cardBodyText!: Scalars['String'];
 
   @TypeGraphQL.Field(type => String)
+  buttonOneLink!: Scalars['String'];
+
+  @TypeGraphQL.Field(type => String, { nullable: true })
+  buttonTwoLink!: Maybe<Scalars['String']>;
+
+  @TypeGraphQL.Field(type => String)
   buttonOptionOne!: Scalars['String'];
 
   @TypeGraphQL.Field(type => String, { nullable: true })
@@ -174,6 +227,25 @@ export class BookInput {
 
   @TypeGraphQL.Field(type => String, { nullable: true })
   synopsis!: Maybe<Scalars['String']>;
+};
+
+@TypeGraphQL.InputType({ description: 'Article input' })
+export class ArticleInput {
+
+  @TypeGraphQL.Field(type => String)
+  queryType!: Scalars['String'];
+
+  @TypeGraphQL.Field(type => String)
+  title!: Scalars['String'];
+
+  @TypeGraphQL.Field(type => String)
+  publisher!: Scalars['String'];
+
+  @TypeGraphQL.Field(type => String)
+  articleUrl!: Scalars['String'];
+
+  @TypeGraphQL.Field(type => String)
+  excerpt!: Scalars['String'];
 };
 
 
@@ -259,10 +331,12 @@ export type ResolversTypes = {
   PortfolioPayload: ResolverTypeWrapper<PortfolioPayload>;
   ID: ResolverTypeWrapper<Scalars['ID']>;
   BookPayload: ResolverTypeWrapper<BookPayload>;
+  ArticlePayload: ResolverTypeWrapper<ArticlePayload>;
   Mutation: ResolverTypeWrapper<{}>;
   SuccessPayload: ResolverTypeWrapper<SuccessPayload>;
   PortfolioInput: PortfolioInput;
   BookInput: BookInput;
+  ArticleInput: ArticleInput;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>;
 };
 
@@ -273,16 +347,19 @@ export type ResolversParentTypes = {
   PortfolioPayload: PortfolioPayload;
   ID: Scalars['ID'];
   BookPayload: BookPayload;
+  ArticlePayload: ArticlePayload;
   Mutation: {};
   SuccessPayload: SuccessPayload;
   PortfolioInput: PortfolioInput;
   BookInput: BookInput;
+  ArticleInput: ArticleInput;
   Boolean: Scalars['Boolean'];
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   getProjects?: Resolver<Array<ResolversTypes['PortfolioPayload']>, ParentType, ContextType, RequireFields<QueryGetProjectsArgs, 'data'>>;
   getBooks?: Resolver<Array<ResolversTypes['BookPayload']>, ParentType, ContextType, RequireFields<QueryGetBooksArgs, 'data'>>;
+  getArticles?: Resolver<Array<ResolversTypes['ArticlePayload']>, ParentType, ContextType, RequireFields<QueryGetArticlesArgs, 'data'>>;
 };
 
 export type PortfolioPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['PortfolioPayload'] = ResolversParentTypes['PortfolioPayload']> = {
@@ -293,6 +370,8 @@ export type PortfolioPayloadResolvers<ContextType = any, ParentType extends Reso
   headerBody?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   headerFooter?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   cardBodyText?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  buttonOneLink?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  buttonTwoLink?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   buttonOptionOne?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   buttonOptionTwo?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -309,9 +388,20 @@ export type BookPayloadResolvers<ContextType = any, ParentType extends Resolvers
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type ArticlePayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['ArticlePayload'] = ResolversParentTypes['ArticlePayload']> = {
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  queryType?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  publisher?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  articleUrl?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  excerpt?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
   addProject?: Resolver<ResolversTypes['SuccessPayload'], ParentType, ContextType, RequireFields<MutationAddProjectArgs, 'data'>>;
   addBook?: Resolver<ResolversTypes['SuccessPayload'], ParentType, ContextType, RequireFields<MutationAddBookArgs, 'data'>>;
+  addArticle?: Resolver<ResolversTypes['SuccessPayload'], ParentType, ContextType, RequireFields<MutationAddArticleArgs, 'data'>>;
 };
 
 export type SuccessPayloadResolvers<ContextType = any, ParentType extends ResolversParentTypes['SuccessPayload'] = ResolversParentTypes['SuccessPayload']> = {
@@ -323,6 +413,7 @@ export type Resolvers<ContextType = any> = {
   Query?: QueryResolvers<ContextType>;
   PortfolioPayload?: PortfolioPayloadResolvers<ContextType>;
   BookPayload?: BookPayloadResolvers<ContextType>;
+  ArticlePayload?: ArticlePayloadResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   SuccessPayload?: SuccessPayloadResolvers<ContextType>;
 };

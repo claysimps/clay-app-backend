@@ -1,7 +1,7 @@
 import { Arg, Query, Resolver, ClassType } from "type-graphql";
 
-import { PortfolioModel, BookModel } from "../entities";
-import { PortfolioPayload, BookPayload } from "../dto";
+import { PortfolioModel, BookModel, ArticleModel } from "../entities";
+import { PortfolioPayload, BookPayload, ArticlePayload } from "../dto";
 
 function baseQueryResolver<T extends ClassType>(
   suffix: string, //query name
@@ -32,4 +32,10 @@ export const QueryBookResolver = baseQueryResolver(
   "Books",
   BookPayload,
   BookModel,
+);
+
+export const QueryArticleResolver = baseQueryResolver(
+  "Articles",
+  ArticlePayload,
+  ArticleModel,
 );
